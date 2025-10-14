@@ -79,3 +79,10 @@ The project focuses on tackling **data sparsity** in large-scale user–item dat
 * Deploy as an interactive web application or API endpoint
 
 ---
+
+
+Learnings - 
+Types of Recommendation Systems:
+1. Content-Based Filtering => Recommendations based on similarity of items
+2. Collaborative Filtering => Recommendations based on similarity between user behavior
+3. Hybrid => Content-Based + Collaborative
