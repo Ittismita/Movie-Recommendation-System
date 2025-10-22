@@ -1,88 +1,81 @@
-# 🎬 Movie Recommendation System
+# 🎬 Movie Recommendation Systems
 
-A **hybrid recommendation system** that showcases both **content-based** and **collaborative filtering** techniques to deliver accurate, personalized movie suggestions.
-The project focuses on tackling **data sparsity** in large-scale user–item datasets and optimizing top-N recommendation performance through model experimentation and ranking techniques.
-
----
-
-## 🚀 Features
-
-* **Hybrid Filtering Approach**
- Showcasess both *content-based* (movie features) and *collaborative filtering* (user–item interactions) methods to enhance recommendation accuracy and diversity.
-
-* **Sparse Data Handling**
-
-  * Works with large datasets containing millions of user–movie interactions (≈ 34M records).
-  * Reduces sparsity by sampling **top-rated movies** and a **diverse user subset**, maintaining balance between **density and variety**.
-
-* **Performance Evaluation**
-
-  * Metrics used: **Mean Squared Error (MSE)**, **Precision–Recall**, and **AUC**.
-  * Experimental phase includes **LightGBM ranking models** to boost top-N recommendation accuracy.
+This repository implements three core types of **movie recommender systems**, each built using different recommendation strategies and data representations. The project demonstrates how traditional recommendation algorithms can be applied on movie metadata to suggest relevant and similar movies.
 
 ---
 
-## 🧠 Workflow Overview
+## Overview
 
-1. **Data Preprocessing**
+The notebook `mov-rec.ipynb` builds three fundamental recommendation models:
 
-   * Load and clean large-scale user–movie interaction data.
-   * Filter and sample data to mitigate sparsity while preserving representativeness.
+### 1. Popularity-Based Recommender
+A simple **non-personalized** approach that recommends movies based purely on their overall popularity — such as the highest vote count or average rating.  
+Useful as a **baseline model** or for **cold-start** scenarios.
+
+### 2. Content-Based Recommender
+A **personalized system** that uses movie features such as:
+- Overview (plot summary)
+- Genres
+- Keywords
+- Cast and Crew  
+
+These features are combined into a single text representation (`tags`), vectorized using text embedding techniques like **TF-IDF** or **Count Vectorizer**, and similarity is computed using **cosine similarity**.  
+Movies similar in metadata space are recommended to the user.
+
+### 3. Collaborative Filtering Recommender
+A **user-item similarity** based approach that uses relationships among users or items derived from their historical preferences.  
+Instead of relying on explicit rating predictions, this version computes **similarity (distance)** between user or item vectors and recommends the most similar items.
+
+---
+
+## Technologies Used
+
+- **Python**
+- **Pandas** – Data manipulation and analysis  
+- **NumPy** – Numerical computations  
+- **Scikit-learn** – Vectorization and similarity metrics  
+- **Seaborn / Matplotlib** – Visualization  
+- **AST** – Parsing stringified JSON objects in movie metadata  
+- **NLTK** – Tokenization and text normalization  
+
+---
+
+## Workflow Summary
+
+1. **Data Loading and Cleaning**
+   - Load datasets.
+   - Merge dataframes and handle missing values or irrelevant columns.
+   - Convert stringified columns (`genres`, `keywords`, `cast`, `crew`) into structured lists using `ast.literal_eval`.
 
 2. **Feature Engineering**
+   - Combine key descriptive columns (overview, genres, keywords, cast, crew) into a new composite column called `tags`.
+   - Apply text preprocessing — lowercasing, removing spaces, and tokenization.
+   - Convert these tags into numerical vectors using **CountVectorizer** or **TF-IDF**.
 
-   * Generate movie metadata vectors for content-based similarity.
-   * Create user–item interaction matrices for collaborative filtering.
+3. **Model Building**
+   - **Popularity-Based Model:** Sorts and recommends movies by popularity metric.
+   - **Content-Based Model:** Computes **cosine similarity** between movie tag vectors.
+   - **Collaborative Filtering Model:** Computes similarity between user/movie embeddings to recommend similar items.
 
-3. **Model Development**
-
-   * Implement **Content-Based Filtering** using cosine similarity or metadata features.
-   * Build **Collaborative Filtering** models via matrix factorization or nearest-neighbor techniques.
-   * Combine both approaches for a **hybrid model**.
-
-4. **Evaluation**
-
-   * Compute MSE for rating prediction accuracy.
-   * Assess top-N recommendation quality using Precision–Recall and AUC metrics.
-   * Experiment with **LightGBM rankers** to refine ranking performance.
+4. **Recommendation Retrieval**
+   - For a given input movie or user, compute similarity scores.
+   - Retrieve the top-N most similar movies based on distance values.
 
 ---
 
-## 🛠️ Tech Stack
+## Key Learnings
 
-* **Language:** Python
-* **Libraries:**
-
-  * `pandas`, `numpy` — data manipulation and preprocessing
-  * `scikit-learn`, `LightGBM` — modeling and ranking
-  * `scipy`, `surprise`, `implicit` — collaborative filtering frameworks
-  * `matplotlib`, `seaborn` — visualization
+- Recommender systems can function without explicit rating prediction by relying on **similarity-based ranking**.  
+- The **content-based approach** enables personalized yet interpretable recommendations.  
+- **Collaborative filtering** captures user or item-level relationships effectively when historical interactions exist.  
+- Even simple **popularity models** serve as strong baselines and handle new-user cold-start scenarios.
 
 ---
 
-## 📊 Evaluation Metrics
+## Future Improvements
 
-| Metric               | Purpose                                      |
-| -------------------- | -------------------------------------------- |
-| **MSE**              | Measures rating prediction error             |
-| **Precision–Recall** | Evaluates relevance of top-N recommendations |
-| **AUC**              | Assesses overall ranking quality             |
+- Integrate **hybrid recommenders** combining content-based and collaborative methods.  
+- Experiment with **deep learning-based embeddings** using models like **Word2Vec** or **BERT** for movie metadata.  
+- Deploy the system using **Streamlit** or **FastAPI** for interactive user testing.
 
 ---
-
-
-## 📦 Future Enhancements
-
-* Incorporate deep learning–based embeddings (e.g., autoencoders, neural CF)
-* Integrate contextual data (genre preferences, time of day, etc.)
-* Enable cold-start handling for new users and movies
-* Deploy as an interactive web application or API endpoint
-
----
-
-
-Learnings - 
-Types of Recommendation Systems:
-1. Content-Based Filtering => Recommendations based on similarity of items
-2. Collaborative Filtering => Recommendations based on similarity between user behavior
-3. Hybrid => Content-Based + Collaborative
